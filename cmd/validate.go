@@ -57,6 +57,9 @@ func validate() {
 			// get rid of tf specific generic git prefix, for details see
 			// https://www.terraform.io/language/modules/sources#generic-git-repository
 			u, _ := url.Parse(strings.Replace(m.Source, "git::", "", 1))
+			if u.Host == "" { // relative path modules don't have a host e.g. source = "./submodule"
+				continue
+			}
 
 			pathNoSuffix := strings.Replace(u.Path, ".git", "", 1)
 
@@ -70,7 +73,7 @@ func validate() {
 			//_, _, _ = gitlab.Projects.GetProject(gitlabProjectNamespaceName, &gitlab.GetProjectOptions{})
 			tags, _, err := gitlabClient.Tags.ListTags(gitlabProjectNamespaceName, &gitlab.ListTagsOptions{})
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Can't query gitlab; potential authentication error. Please check GITLAB_TOKEN\n")
+				_, _ = fmt.Fprint(os.Stderr, "Can't query gitlab; potential authentication error. Please check GITLAB_TOKEN")
 				os.Exit(1)
 			}
 
