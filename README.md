@@ -12,6 +12,11 @@ brew install rollwagen/tf-module-versions/tf-module-versions
 
 ## Usage
 
+### Pre-requisite
+Currently only terraform modules stored in Gitlab repositories is supported.
+For authentication towards Gitlab, and environment variable `GITLAB_TOKEN`
+needs to be present that holds a valid GitLab authentication token.
+
 ```text
 A tool that validates and compares used vs. available terraform module versions
 in git repositories, specific modules hosted in Gitlab repositories
