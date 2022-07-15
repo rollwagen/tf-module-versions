@@ -5,7 +5,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "tf-modver",
+	Use:   "tf-module-versions",
 	Short: "A tool that check and compares used vs. available terraform module versions in git repositories",
 	Long: `A tool that validates and compares used vs. available terraform module version
 in git repositories, specific modules hosted in Gitlab repositories`,
