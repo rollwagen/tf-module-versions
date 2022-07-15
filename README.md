@@ -7,4 +7,5 @@ in git repositories, specific modules hosted in Gitlab repositories
 
 ```sh
 brew tap "rollwagen/tf-module-versions" "https://github.com/rollwagen/tf-module-versions"
+brew install rollwagen/tf-module-versions/tf-module-versions
 ```
