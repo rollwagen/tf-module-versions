@@ -20,10 +20,10 @@ builds:
       - -s
       - -w
     dir: .
-    binary: tfmodver
+    binary: tf-module-versions
 
 brews:
-- name: tfmodver
+- name: tf-module-versions
   tap:
     owner: rollwagen
     name: tf-module-versions
