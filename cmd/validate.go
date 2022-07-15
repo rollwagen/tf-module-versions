@@ -104,10 +104,12 @@ func validate() {
 					Str("file", fmt.Sprintf("%s:%d", m.Pos.Filename, m.Pos.Line)).
 					Msg(color.New(color.FgRed).Add(color.Bold).Sprint("✖ ···>"))
 			} else if vUsed.Equal(vLatest) && !vUsed.Equal(zeroVersion) {
-				log.Debug().
-					Str("module", m.Name).
-					Str("file", fmt.Sprintf("%s:%d", m.Pos.Filename, m.Pos.Line)).
-					Msg(color.New(color.FgGreen).Add(color.Bold).Sprint("✔ latest version in use"))
+				if !Quiet {
+					log.Debug().
+						Str("module", m.Name).
+						Str("file", fmt.Sprintf("%s:%d", m.Pos.Filename, m.Pos.Line)).
+						Msg(color.New(color.FgGreen).Add(color.Bold).Sprint("✔ latest version in use"))
+				}
 			}
 		}
 	}
