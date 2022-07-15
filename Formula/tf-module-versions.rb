@@ -5,12 +5,12 @@
 class TfModuleVersions < Formula
   desc ""
   homepage ""
-  version "0.0.2"
+  version "0.0.3"
   license "Apache-2.0"
 
   on_macos do
-    url "https://github.com/rollwagen/tf-module-versions/releases/download/v0.0.2/tf-module-versions_0.0.2_darwin_all.tar.gz"
-    sha256 "1e2107c2bdb995094a0c7295bdedb6cd7ac1346b4cb53801b84522c9a2d2384e"
+    url "https://github.com/rollwagen/tf-module-versions/releases/download/v0.0.3/tf-module-versions_0.0.3_darwin_all.tar.gz"
+    sha256 "9a78ca91a014185658a138785c778633b2bd162a7b5fdb15f792455515be700f"
 
     def install
       bin.install "tf-module-versions"
@@ -19,16 +19,16 @@ class TfModuleVersions < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/rollwagen/tf-module-versions/releases/download/v0.0.2/tf-module-versions_0.0.2_linux_arm64.tar.gz"
-      sha256 "fc2924bdfd8b9a2f7a312e71d11bc1a8758507c298c5f5392860d3cc304c34c0"
+      url "https://github.com/rollwagen/tf-module-versions/releases/download/v0.0.3/tf-module-versions_0.0.3_linux_arm64.tar.gz"
+      sha256 "db6227372f07dfface28ac61337aa37333833db3372130990ed77d8e006f8c3a"
 
       def install
         bin.install "tf-module-versions"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/rollwagen/tf-module-versions/releases/download/v0.0.2/tf-module-versions_0.0.2_linux_amd64.tar.gz"
-      sha256 "4ceab8ee86dc4b93e1dccea62abfc6555ecaeb7d3b4e3307272c1456381ee3d0"
+      url "https://github.com/rollwagen/tf-module-versions/releases/download/v0.0.3/tf-module-versions_0.0.3_linux_amd64.tar.gz"
+      sha256 "8de5a280c8dced428f53ee2e8aa9581e3c2347f15e633d1a4684ea9584b2e792"
 
       def install
         bin.install "tf-module-versions"
