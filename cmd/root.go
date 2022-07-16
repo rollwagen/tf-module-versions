@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	Quiet bool
+	FlagQuiet bool
 
 	rootCmd = &cobra.Command{
 		Use:   "tf-module-versions",
@@ -20,5 +20,5 @@ func Execute() error {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&Quiet, "quiet", "q", false, "Suppress debug output")
+	rootCmd.PersistentFlags().BoolVarP(&FlagQuiet, "quiet", "q", false, "Suppress debug output")
 }
