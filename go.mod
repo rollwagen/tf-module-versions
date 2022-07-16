@@ -1,4 +1,4 @@
-module tf-module-versions
+module github.com/rollwagen/tf-module-versions
 
 go 1.18
 
@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20211115214459-90acf1ca460f
 	github.com/rs/zerolog v1.27.0
 	github.com/spf13/cobra v1.5.0
-	github.com/xanzy/go-gitlab v0.68.2
+	github.com/xanzy/go-gitlab v0.69.0
 )
 
 require (
