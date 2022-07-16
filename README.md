@@ -1,5 +1,8 @@
 # Terraform module source version checker
 
+![CodeQL](https://github.com/rollwagen/tf-module-versions/workflows/CodeQL/badge.svg)
+[![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
+
 A tool that validates and compares used vs. available terraform module versions
 in git repositories, specific modules hosted in Gitlab repositories
 
