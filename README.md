@@ -9,15 +9,17 @@ in git repositories, specific modules hosted in Gitlab repositories
 ## Install
 
 ```sh
-brew tap "rollwagen/tf-module-versions" "https://github.com/rollwagen/tf-module-versions"
-brew install rollwagen/tf-module-versions/tf-module-versions
+brew tap rollwagen/homebrew-tap
+brew install rollwagen/tap/tf-module-versions
 ```
 
 ## Usage
 
-### Pre-requisite
-Currently only terraform modules stored in Gitlab repositories is supported.
-For authentication towards Gitlab, and environment variable `GITLAB_TOKEN`
+### Pre-requisites
+
+Currently, version validation support is only for terraform modules stored
+in Gitlab repositories.
+For authentication towards Gitlab, an environment variable `GITLAB_TOKEN`
 needs to be present that holds a valid GitLab authentication token.
 
 ```text
@@ -25,7 +27,7 @@ A tool that validates and compares used vs. available terraform module versions
 in git repositories, specific modules hosted in Gitlab repositories
 
 Usage:
-  tf-modver [command]
+  tfm [command]
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
@@ -35,9 +37,9 @@ Available Commands:
 Flags:
   -h, --help   help for tf-modver
 
-Use "tf-modver [command] --help" for more information about a command.
+Use "tfm [command] --help" for more information about a command.
 ```
 
-Example output of running `tf-module-versions validate`
+Example output of running `tfm validate`
 
 <img width="901" alt="image" src="https://user-images.githubusercontent.com/7364201/179170042-5649e5f1-dc31-4e00-9a4d-8e4c7c5773df.png">
