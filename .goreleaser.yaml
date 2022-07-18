@@ -1,10 +1,8 @@
-# https://goreleaser.com
 project_name: tf-module-versions
 
 before:
   hooks:
     - go mod tidy
-    -
 
 builds:
   - env:
@@ -15,28 +13,23 @@ builds:
     goarch:
       - amd64
       - arm64
+    binary: tfm
     ldflags:
-      - -X main.BuildVersion={{.Version}}
-      - -s
-      - -w
-    dir: .
-    binary: tf-module-versions
+      - -s -w -X main.build={{.Version}}
 
 brews:
-- name: tf-module-versions
-  tap:
-    owner: rollwagen
-    name: tf-module-versions
-  folder: Formula
-  license: Apache-2.0
-
-universal_binaries:
-  - replace: true
+  - name: tf-module-versions
+    tap:
+      owner: rollwagen
+      name: homebrew-tap
+    license: Apache-2.0
 
 checksum:
   name_template: 'checksums.txt'
+
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
+
 changelog:
   sort: asc
   filters:
