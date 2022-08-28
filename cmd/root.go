@@ -5,7 +5,8 @@ import (
 )
 
 var (
-	FlagQuiet bool
+	FlagQuiet   bool
+	FlagVerbose bool
 
 	rootCmd = &cobra.Command{
 		Use:   "tfm",
@@ -20,5 +21,6 @@ func Execute() error {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&FlagQuiet, "quiet", "q", false, "Suppress debug output")
+	rootCmd.PersistentFlags().BoolVarP(&FlagQuiet, "quiet", "q", false, "DEPRECATED: log output suppressed by default now; use --verbose to enable")
+	rootCmd.PersistentFlags().BoolVarP(&FlagVerbose, "verbose", "v", false, "Suppress debug output")
 }

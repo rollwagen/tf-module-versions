@@ -7,6 +7,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/rollwagen/tf-module-versions/internal/tf"
+	"github.com/rollwagen/tf-module-versions/pkg/printer"
+
 	"github.com/fatih/color"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
@@ -15,56 +18,19 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
-type Module struct {
-	Name     string
-	Location struct {
-		FileName string
-		Line     int
-	}
-	UsedVersion      string
-	AvailableVersion string
-}
-
-func NewModule(name string, usedVersion, availableVersion, fileName string, line int) (*Module, error) {
-	for _, v := range []string{usedVersion, availableVersion} {
-		_, err := version.NewVersion(v)
-		if err != nil {
-			return nil, fmt.Errorf("'%s' is not a valid version string: %w", v, err)
-		}
-	}
-
-	m := Module{
-		Name:             name,
-		UsedVersion:      usedVersion,
-		AvailableVersion: availableVersion,
-	}
-	m.Location.FileName = fileName
-	m.Location.Line = line
-
-	return &m, nil
-}
-
-func (m Module) HasNewerVersion() bool {
-	ver := func(s string) *version.Version {
-		v, _ := version.NewVersion(s)
-		return v
-	}
-	return ver(m.UsedVersion).LessThan(ver(m.AvailableVersion))
-}
-
-func (m Module) HasSameVersion() bool {
-	return m.AvailableVersion == m.UsedVersion
-}
-
 // Validate inspect and check used terraform gitlab reference versions
-func Validate(dir string, quiet bool) []Module {
+func Validate(dir string, verbose bool) []tf.Module {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+	if verbose {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	}
 
-	var validatedModules []Module
+	var validatedModules []tf.Module
 
 	gitlabToken := os.Getenv("GITLAB_TOKEN")
 	if gitlabToken == "" {
-		_, _ = fmt.Fprintln(os.Stderr, "Please define gitlab auth token as environment variable GITLAB_TOKEN")
+		_, _ = fmt.Fprintln(os.Stderr, "Please define gitlab auth token with environment variable GITLAB_TOKEN")
 		os.Exit(1)
 	}
 
@@ -88,7 +54,13 @@ func Validate(dir string, quiet bool) []Module {
 		sourceVersion = splitSource[len(splitSource)-1]
 
 		// get rid of tf specific generic git:: prefix
-		u, _ := url.Parse(strings.Replace(moduleCall.Source, "git::", "", 1))
+		sourceWithoutPrefix := strings.Replace(moduleCall.Source, "git::", "", 1)
+		// get rid of tf specific generic git@ prefix
+		sourceWithoutUser := strings.Replace(sourceWithoutPrefix, "git@", "", 1)
+		u, err := url.Parse(sourceWithoutUser)
+		if err != nil {
+			panic(err)
+		}
 		if u.Host == "" { // path source have no version and also no host e.g. source = "./submodule"
 			continue
 		}
@@ -119,7 +91,7 @@ func Validate(dir string, quiet bool) []Module {
 			sourceVersion = "0" // set to default '0' as no valid version number referenced
 		}
 
-		module, _ := NewModule(moduleCall.Name, sourceVersion, latestVersion, moduleCall.Pos.Filename, moduleCall.Pos.Line)
+		module, _ := tf.NewModule(moduleCall.Name, sourceVersion, latestVersion, moduleCall.Pos.Filename, moduleCall.Pos.Line)
 		validatedModules = append(validatedModules, *module)
 
 		if module.HasNewerVersion() {
@@ -130,7 +102,7 @@ func Validate(dir string, quiet bool) []Module {
 				Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
 				Msg(color.New(color.FgRed).Add(color.Bold).Sprint("✖ ···>"))
 		} else if module.HasSameVersion() && module.UsedVersion != "0" {
-			if !quiet {
+			if verbose {
 				log.Debug().
 					Str("tfModule", module.Name).
 					Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
@@ -139,6 +111,9 @@ func Validate(dir string, quiet bool) []Module {
 		}
 	}
 	log.Debug().Msg("validation completed")
+
+	p := printer.TextPrinter{}
+	_ = p.PrintReport(validatedModules, os.Stdout)
 
 	return validatedModules
 }
