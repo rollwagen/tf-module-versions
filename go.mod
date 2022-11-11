@@ -5,11 +5,11 @@ go 1.19
 require (
 	github.com/fatih/color v1.13.0
 	github.com/hashicorp/go-version v1.6.0
-	github.com/hashicorp/terraform-config-inspect v0.0.0-20211115214459-90acf1ca460f
-	github.com/jedib0t/go-pretty/v6 v6.3.9
+	github.com/hashicorp/terraform-config-inspect v0.0.0-20221020162138-81db043ad408
+	github.com/jedib0t/go-pretty/v6 v6.4.2
 	github.com/rs/zerolog v1.28.0
-	github.com/spf13/cobra v1.5.0
-	github.com/xanzy/go-gitlab v0.73.1
+	github.com/spf13/cobra v1.6.1
+	github.com/xanzy/go-gitlab v0.74.0
 )
 
 require (
@@ -22,7 +22,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.1 // indirect
 	github.com/hashicorp/hcl v0.0.0-20170504190234-a4b07c25de5f // indirect
 	github.com/hashicorp/hcl/v2 v2.0.0 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect

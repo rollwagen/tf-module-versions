@@ -18,14 +18,23 @@ builds:
       - -s -w -X main.build={{.Version}}
 
 brews:
-  - name: tf-module-versions
-    tap:
+  - tap:
       owner: rollwagen
       name: homebrew-tap
     license: Apache-2.0
+    install: |-
+      bin.install "tfm"
+      bash_completion.install "completions/tfm.bash" => "tfm"
+      zsh_completion.install "completions/tfm.zsh" => "_tfm"
+      fish_completion.install "completions/tfm.fish"
 
 checksum:
   name_template: 'checksums.txt'
+
+archives:
+  - files:
+      - README.md
+      - completions/*
 
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
