@@ -7,13 +7,14 @@ import (
 )
 
 type Module struct {
-	Name     string
+	Name     string `json:"name"`
 	Location struct {
-		FileName string
-		Line     int
+		FileName string `json:"fileName"`
+		Line     int    `json:"line"`
 	}
-	UsedVersion      string
-	AvailableVersion string
+	UsedVersion      string `json:"usedVersion"`
+	AvailableVersion string `json:"availableVersion"`
+	GitReference     string `json:"gitRef"`
 }
 
 func NewModule(name string, usedVersion, availableVersion, fileName string, line int) (*Module, error) {

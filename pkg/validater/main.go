@@ -19,7 +19,7 @@ import (
 )
 
 // Validate inspect and check used terraform gitlab reference versions
-func Validate(dir string, verbose bool) []tf.Module {
+func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	zerolog.SetGlobalLevel(zerolog.ErrorLevel)
 	if verbose {
@@ -81,6 +81,8 @@ func Validate(dir string, verbose bool) []tf.Module {
 			os.Exit(1)
 		}
 
+		gitRef := sourceVersion
+
 		_, err = version.NewVersion(sourceVersion)
 		if err != nil {
 			log.Warn().
@@ -92,6 +94,7 @@ func Validate(dir string, verbose bool) []tf.Module {
 		}
 
 		module, _ := tf.NewModule(moduleCall.Name, sourceVersion, latestVersion, moduleCall.Pos.Filename, moduleCall.Pos.Line)
+		module.GitReference = gitRef
 		validatedModules = append(validatedModules, *module)
 
 		if module.HasNewerVersion() {
@@ -112,7 +115,13 @@ func Validate(dir string, verbose bool) []tf.Module {
 	}
 	log.Debug().Msg("validation completed")
 
-	p := printer.TextPrinter{}
+	var p printer.ModuleVersionPrinter
+	switch outputFormat {
+	case "table":
+		p = printer.TextPrinter{}
+	case "json":
+		p = printer.JSONPrinter{}
+	}
 	_ = p.PrintReport(validatedModules, os.Stdout)
 
 	return validatedModules
