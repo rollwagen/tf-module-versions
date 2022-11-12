@@ -1,6 +1,7 @@
 package tf
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hashicorp/go-version"
@@ -11,10 +12,24 @@ type Module struct {
 	Location struct {
 		FileName string `json:"fileName"`
 		Line     int    `json:"line"`
-	}
+	} `json:"location"`
 	UsedVersion      string `json:"usedVersion"`
 	AvailableVersion string `json:"availableVersion"`
 	GitReference     string `json:"gitRef"`
+}
+
+func (m Module) MarshalJSON() ([]byte, error) {
+	type baseModule Module
+	// Marshal baseModule with an extension
+	return json.Marshal(
+		struct {
+			baseModule
+			HasNewerVersion bool `json:"hasNewerVersion"`
+		}{
+			baseModule(m),
+			m.HasNewerVersion(),
+		},
+	)
 }
 
 func NewModule(name string, usedVersion, availableVersion, fileName string, line int) (*Module, error) {
