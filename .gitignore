@@ -2,6 +2,7 @@
 s3-cisbench
 bin/**
 dist/
+completions/
 
 # Ignore IDE settings
 .idea
