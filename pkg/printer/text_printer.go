@@ -20,6 +20,9 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 	red := func(s string) string {
 		return color.New(color.FgRed).Sprintf("%s", s)
 	}
+	magenta := func(s string) string {
+		return color.New(color.FgHiMagenta).Sprintf("%s", s)
+	}
 	yellow := func(s string) string {
 		return color.New(color.FgYellow).Sprintf("%s", s)
 	}
@@ -36,7 +39,13 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 		status := "?"
 
 		if m.HasNewerVersion() {
-			status = yellow("⚠")
+			status = magenta("⚠")
+			switch m.NewerVersion() {
+			case "MINOR":
+				status = yellow("⚠")
+			case "MAJOR":
+				status = red("⚠")
+			}
 		}
 
 		if m.HasSameVersion() {
@@ -44,7 +53,7 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 		}
 
 		used := m.UsedVersion
-		if m.UsedVersion == "0" {
+		if m.UsedVersion == "nil" {
 			used = red("✖")
 			status = red("")
 		}

@@ -52,6 +52,7 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 		// get version ref from git url "...ref=1.1.1"
 		splitSource := strings.Split(moduleCall.Source, "=")
 		sourceVersion = splitSource[len(splitSource)-1]
+		log.Debug().Str("tfModule", moduleCall.Name).Msg(fmt.Sprintf("sourceVersion='%s'", sourceVersion))
 
 		// get rid of tf specific generic git:: prefix
 		sourceWithoutPrefix := strings.Replace(moduleCall.Source, "git::", "", 1)
@@ -90,11 +91,14 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 				Str("file", fmt.Sprintf("%s:%d", moduleCall.Pos.Filename, moduleCall.Pos.Line)).
 				Msg(fmt.Sprintf("ref '%s' is not a valid version string", sourceVersion))
 
-			sourceVersion = "0" // set to default '0' as no valid version number referenced
+			sourceVersion = "nil" // set to default 'nil' as no valid version number referenced
 		}
 
-		module, _ := tf.NewModule(moduleCall.Name, sourceVersion, latestVersion, moduleCall.Pos.Filename, moduleCall.Pos.Line)
-		module.GitReference = gitRef
+		module, err := tf.NewModule(moduleCall.Name, sourceVersion, latestVersion, gitRef, moduleCall.Pos.Filename, moduleCall.Pos.Line)
+		if err != nil {
+			log.Error().Msg(fmt.Sprintf("could not create new module %s: %v", moduleCall.Name, err))
+			os.Exit(1)
+		}
 		validatedModules = append(validatedModules, *module)
 
 		if module.HasNewerVersion() {
@@ -104,7 +108,7 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 				Str("version_latest", module.AvailableVersion).
 				Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
 				Msg(color.New(color.FgRed).Add(color.Bold).Sprint("✖ ···>"))
-		} else if module.HasSameVersion() && module.UsedVersion != "0" {
+		} else if module.HasSameVersion() && module.UsedVersion != "nil" {
 			if verbose {
 				log.Debug().
 					Str("tfModule", module.Name).
@@ -121,8 +125,13 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 		p = printer.TextPrinter{}
 	case "json":
 		p = printer.JSONPrinter{}
+	case "noout":
+		// don't define any printer
 	}
-	_ = p.PrintReport(validatedModules, os.Stdout)
+
+	if p != nil {
+		_ = p.PrintReport(validatedModules, os.Stdout)
+	}
 
 	return validatedModules
 }
@@ -141,7 +150,7 @@ func retrieveLatestVersion(gitlabClient *gitlab.Client, moduleNamespaceName stri
 		}
 	}
 	sort.Strings(availableVersions)
-	latestVersion := "0"
+	latestVersion := "nil"
 	if len(availableVersions) > 0 {
 		latestVersion = availableVersions[len(availableVersions)-1]
 	}
