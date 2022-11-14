@@ -66,7 +66,7 @@ func newVersion(versionAsString string) (*version.Version, error) {
 
 func (m Module) HasNewerVersion() bool {
 	ver := func(s string) *version.Version {
-		v, _ := version.NewVersion(s)
+		v, _ := newVersion(s)
 		return v
 	}
 
