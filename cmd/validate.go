@@ -21,6 +21,6 @@ var versionCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(versionCmd)
 
-	versionCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Select output format (table, json, or noout)")
+	versionCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Select output format (table, json, errorformat or noout)")
 	versionCmd.Flags().StringVarP(&directory, "directory", "d", ".", "Terraform code directory to validate")
 }

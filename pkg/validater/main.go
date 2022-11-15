@@ -125,6 +125,8 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 		p = printer.TextPrinter{}
 	case "json":
 		p = printer.JSONPrinter{}
+	case "errorformat":
+		p = printer.ErrorformatPrinter{}
 	case "noout":
 		// don't define any printer
 	}

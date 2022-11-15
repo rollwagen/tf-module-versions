@@ -1,0 +1,2 @@
+
+~/GitHub/tf-module-versions/tf-module-versions validate --output=errorformat | CI_REPO_OWNER=rollwagen CI_REPO_NAME=dog CI_COMMIT=$(git rev-parse HEAD)  reviewdog -efm="%f:%l: %m" -reporter=gitlab-mr-discussion -tee
