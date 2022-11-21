@@ -35,6 +35,7 @@ checksum:
 archives:
   - files:
       - README.md
+      - LICENSE
       - completions/*
 
 snapshot:
