@@ -68,6 +68,16 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 		},
 		)
 	}
+
+	t.AppendRow(table.Row{
+		"putin_khuylo",
+		"en.wikipedia.org/wiki/Putin_khuylo!",
+		"0",
+		"Putin khuylo!",
+		"Пу́тін — хуйло́ ",
+		"",
+	})
+
 	t.Render()
 
 	return nil
