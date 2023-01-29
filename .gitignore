@@ -1,5 +1,6 @@
+notes.txt
 # Ignore executables
-s3-cisbench
+main
 bin/**
 dist/
 completions/
