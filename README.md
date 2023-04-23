@@ -1,5 +1,6 @@
 # Terraform module source version checker
 
+![Downloads](https://img.shields.io/github/downloads/rollwagen/tf-module-versions/total)
 ![CodeQL](https://github.com/rollwagen/tf-module-versions/workflows/CodeQL/badge.svg)
 [![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
 
