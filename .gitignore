@@ -3,7 +3,10 @@ notes.txt
 main
 bin/**
 dist/
+
 completions/
+
+*.tf
 
 # Ignore IDE settings
 .idea
