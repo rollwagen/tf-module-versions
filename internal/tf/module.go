@@ -85,8 +85,10 @@ func (m Module) HasSameVersion() bool {
 func (m Module) NewerVersion() string {
 	versionLevel := []string{"MAJOR", "MINOR", "PATCH"}
 
+	const versionUndefined = "UNDEFINED"
+
 	if !m.HasNewerVersion() {
-		return "UNDEFINED"
+		return versionUndefined
 	}
 
 	used, _ := newVersion(m.UsedVersion)
@@ -96,7 +98,7 @@ func (m Module) NewerVersion() string {
 	for i := range used.Segments() {
 
 		if i > 2 || (i > len(used.Segments())-1 && i > len(available.Segments())) {
-			return "UNDEFINED"
+			return versionUndefined
 		}
 
 		if available.Segments()[i] > used.Segments()[i] {
@@ -104,5 +106,5 @@ func (m Module) NewerVersion() string {
 		}
 	}
 
-	return "UNDEFINED"
+	return versionUndefined
 }

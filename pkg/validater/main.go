@@ -85,13 +85,14 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 		gitRef := sourceVersion
 
 		_, err = version.NewVersion(sourceVersion)
+		const versionNil = "nil"
 		if err != nil {
 			log.Warn().
 				Str("tfModule", moduleCall.Name).
 				Str("file", fmt.Sprintf("%s:%d", moduleCall.Pos.Filename, moduleCall.Pos.Line)).
 				Msg(fmt.Sprintf("ref '%s' is not a valid version string", sourceVersion))
 
-			sourceVersion = "nil" // set to default 'nil' as no valid version number referenced
+			sourceVersion = versionNil // set to default 'nil' as no valid version number referenced
 		}
 
 		module, err := tf.NewModule(moduleCall.Name, sourceVersion, latestVersion, gitRef, moduleCall.Pos.Filename, moduleCall.Pos.Line)
@@ -108,7 +109,7 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 				Str("version_latest", module.AvailableVersion).
 				Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
 				Msg(color.New(color.FgRed).Add(color.Bold).Sprint("✖ ···>"))
-		} else if module.HasSameVersion() && module.UsedVersion != "nil" {
+		} else if module.HasSameVersion() && module.UsedVersion != versionNil {
 			if verbose {
 				log.Debug().
 					Str("tfModule", module.Name).
