@@ -34,6 +34,7 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 		os.Exit(1)
 	}
 
+	log.Debug().Msg(fmt.Sprintf("loading module from dir '%s'", dir))
 	tfModule, diag := tfconfig.LoadModule(dir)
 	if diag.HasErrors() {
 		_, _ = fmt.Fprintf(os.Stderr, "The terraform tfModule contains errors: %v\n", diag)
@@ -46,6 +47,7 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 
 		// for git references modules will be empty (vs registry referenced modules)
 		if sourceVersion != "" {
+			log.Debug().Msg("terraform 'version=' used. skipping")
 			continue
 		}
 
@@ -58,11 +60,13 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 		sourceWithoutPrefix := strings.Replace(moduleCall.Source, "git::", "", 1)
 		// get rid of tf specific generic git@ prefix
 		sourceWithoutUser := strings.Replace(sourceWithoutPrefix, "git@", "", 1)
+		log.Debug().Str("tfModule", moduleCall.Name).Msg(fmt.Sprintf("parsing module source url '%s'", sourceWithoutUser))
 		u, err := url.Parse(sourceWithoutUser)
 		if err != nil {
 			panic(err)
 		}
 		if u.Host == "" { // path source have no version and also no host e.g. source = "./submodule"
+			log.Debug().Str("tfModule", moduleCall.Name).Msg("path source has no host")
 			continue
 		}
 
@@ -143,17 +147,43 @@ func retrieveLatestVersion(gitlabClient *gitlab.Client, moduleNamespaceName stri
 		return "", fmt.Errorf("error querying gitlab; potential auth issue; check GITLAB_TOKEN: %w", err)
 	}
 
-	var availableVersions []string
+	var availableVersionsRaw []string
 	for _, t := range tags {
 		_, err := version.NewVersion(t.Name)
 		if err == nil {
-			availableVersions = append(availableVersions, t.Name)
+			availableVersionsRaw = append(availableVersionsRaw, t.Name)
 		}
 	}
-	sort.Strings(availableVersions)
-	latestVersion := "nil"
-	if len(availableVersions) > 0 {
-		latestVersion = availableVersions[len(availableVersions)-1]
+
+	sort.Strings(availableVersionsRaw)
+	log.Debug().Msg(fmt.Sprintf("available versions for %s raw: %v", moduleNamespaceName, availableVersionsRaw))
+	return determineLatestVersionString(availableVersionsRaw)
+}
+
+func determineLatestVersionString(availableVersionsRaw []string) (string, error) {
+	var versions []*version.Version
+
+	versionToRaw := make(map[*version.Version]string)
+
+	for _, raw := range availableVersionsRaw {
+		v, _ := version.NewVersion(raw)
+		if v != nil {
+			versions = append(versions, v)
+			versionToRaw[v] = raw
+		} else {
+			log.Debug().Msg(fmt.Sprintf("could not determine latest version for %s", raw))
+		}
 	}
-	return latestVersion, nil
+	sort.Sort(version.Collection(versions))
+	log.Debug().Msg(fmt.Sprintf("sorted versions = %v", versions))
+
+	var latestVersion *version.Version
+	if len(versions) > 0 {
+		latestVersion = versions[len(versions)-1]
+	}
+	if latestVersion == nil {
+		return "nil", nil
+	}
+
+	return versionToRaw[latestVersion], nil
 }
