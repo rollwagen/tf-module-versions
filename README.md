@@ -6,7 +6,10 @@
 
 ![image](https://user-images.githubusercontent.com/7364201/180030995-cd871550-4c58-4abf-9554-acd1d5c14cd7.png)
 
-A tool that validates and compares used vs. available terraform module versions in git repositories, specific modules hosted in Gitlab repositories
+A tool that validates and compares used vs. available terraform module versions in git repositories; at the moment only modules hosted in Gitlab repositories.
+
+<img width="693" alt="image" src="https://github.com/rollwagen/tf-module-versions/assets/7364201/79244796-c83f-493d-b73f-62fd5378e470">
+
 
 ## Install
 
@@ -25,8 +28,8 @@ For authentication towards Gitlab, an environment variable `GITLAB_TOKEN`
 needs to be present that holds a valid GitLab authentication token.
 
 ```text
-A tool that validates and compares used vs. available terraform module versions
-in git repositories, specific modules hosted in Gitlab repositories
+'tfm' validates and compares used vs. available terraform module versions
+in git repositories.
 
 Usage:
   tfm [command]
