@@ -3,6 +3,7 @@ package printer
 import (
 	"fmt"
 	"io"
+	"math/rand"
 
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -30,12 +31,21 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 		return color.New(color.FgHiGreen).Sprintf("%s", s)
 	}
 
+	y := func(s string) string {
+		return color.New(color.FgHiYellow).Sprintf("%s", s)
+	}
+	b := func(s string) string {
+		return color.New(color.FgHiBlue).Sprintf("%s", s)
+	}
+
 	t := table.NewWriter()
 	t.SetStyle(table.StyleDefault)
 	t.SetOutputMirror(writer)
-	t.AppendHeader(table.Row{"Name", "File", "Line", "Version used", "Version available", "Status"})
+	t.AppendHeader(table.Row{"Name", "File", "Line", "Version tag used", "Version tag available", "Status"})
 
-	for _, m := range modules {
+	pkIndex := rand.Intn(len(modules)) //nolint:gosec
+
+	for i, m := range modules {
 		status := "?"
 
 		if m.HasNewerVersion() {
@@ -67,16 +77,18 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 			status,
 		},
 		)
-	}
 
-	t.AppendRow(table.Row{
-		"putin_khuylo",
-		"en.wikipedia.org/wiki/Putin_khuylo!",
-		"0",
-		"Putin khuylo!",
-		"Пу́тін — хуйло́ ",
-		"",
-	})
+		if i == pkIndex {
+			t.AppendRow(table.Row{
+				b("putin_khuylo"),
+				y("en.wikipedia.org/wiki/Putin_khuylo!"),
+				b("0"),
+				y("Putin khuylo!"),
+				b("Пу́тін—хуйло́ "),
+				"",
+			})
+		}
+	}
 
 	t.Render()
 
