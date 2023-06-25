@@ -80,7 +80,7 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 			os.Exit(1)
 		}
 
-		latestVersion, err := retrieveLatestVersion(gitlabClient, gitlabProjectNamespaceName)
+		latestVersion, err := retrieveLatestVersionTag(gitlabClient, gitlabProjectNamespaceName)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Error getting latest version from gitlab: %v\n", err)
 			os.Exit(1)
@@ -114,12 +114,10 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 				Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
 				Msg(color.New(color.FgRed).Add(color.Bold).Sprint("✖ ···>"))
 		} else if module.HasSameVersion() && module.UsedVersion != versionNil {
-			if verbose {
-				log.Debug().
-					Str("tfModule", module.Name).
-					Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
-					Msg(color.New(color.FgGreen).Add(color.Bold).Sprint("✔ latest version used"))
-			}
+			log.Debug().
+				Str("tfModule", module.Name).
+				Str("file", fmt.Sprintf("%s:%d", module.Location.FileName, module.Location.Line)).
+				Msg(color.New(color.FgGreen).Add(color.Bold).Sprint("✔ latest version used"))
 		}
 	}
 	log.Debug().Msg("validation completed")
@@ -141,7 +139,10 @@ func Validate(dir string, outputFormat string, verbose bool) []tf.Module {
 	return validatedModules
 }
 
-func retrieveLatestVersion(gitlabClient *gitlab.Client, moduleNamespaceName string) (string, error) {
+// retrieveLatestVersionTag retrieves the latest version tag for a given Gitlab module namespace.
+// It queries the Gitlab API for tags in the namespace, filters to only valid semantic versions,
+// sorts the versions in descending order, and returns the latest version string.
+func retrieveLatestVersionTag(gitlabClient *gitlab.Client, moduleNamespaceName string) (string, error) {
 	tags, _, err := gitlabClient.Tags.ListTags(moduleNamespaceName, &gitlab.ListTagsOptions{})
 	if err != nil {
 		return "", fmt.Errorf("error querying gitlab; potential auth issue; check GITLAB_TOKEN: %w", err)
@@ -149,29 +150,30 @@ func retrieveLatestVersion(gitlabClient *gitlab.Client, moduleNamespaceName stri
 
 	var availableVersionsRaw []string
 	for _, t := range tags {
-		_, err := version.NewVersion(t.Name)
-		if err == nil {
-			availableVersionsRaw = append(availableVersionsRaw, t.Name)
-		}
+		availableVersionsRaw = append(availableVersionsRaw, t.Name)
 	}
 
-	sort.Strings(availableVersionsRaw)
 	log.Debug().Msg(fmt.Sprintf("available versions for %s raw: %v", moduleNamespaceName, availableVersionsRaw))
+
 	return determineLatestVersionString(availableVersionsRaw)
 }
 
+// determineLatestVersionString returns the latest version tag from a slice of raw version strings.
+// It parses each raw version string into a Version, sorts the versions in descending order,
+// and returns the latest original version string (raw version).
 func determineLatestVersionString(availableVersionsRaw []string) (string, error) {
 	var versions []*version.Version
 
 	versionToRaw := make(map[*version.Version]string)
 
+	// filter out tag that are not a semver version string such as e.g. tag='beta' would be filtered out
 	for _, raw := range availableVersionsRaw {
 		v, _ := version.NewVersion(raw)
 		if v != nil {
 			versions = append(versions, v)
 			versionToRaw[v] = raw
 		} else {
-			log.Debug().Msg(fmt.Sprintf("could not determine latest version for %s", raw))
+			log.Debug().Msg(fmt.Sprintf("skipping tag '%s' as not a semver compatible version", raw))
 		}
 	}
 	sort.Sort(version.Collection(versions))
