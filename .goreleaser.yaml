@@ -29,8 +29,7 @@ brews:
       fish_completion.install "completions/tfm.fish"
 
 checksum:
-  name_template: 'checksums.txt'
-
+  name_template: checksums.txt
 
 archives:
   - files:
@@ -45,5 +44,5 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
+      - "^docs:"
+      - "^test:"

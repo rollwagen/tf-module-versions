@@ -5,9 +5,9 @@
 
 set -euf -o pipefail
 
-if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$'; then
-  echo "\$VERSION is not in MAJOR.MINOR.PATCH format"
-  exit 1
+if ! echo "${VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$'; then
+	echo "${VERSION} is not in MAJOR.MINOR.PATCH format"
+	exit 1
 fi
 
 # Create a new tag and push it, this will trigger the goreleaser workflow in .github/workflows/goreleaser.yml
