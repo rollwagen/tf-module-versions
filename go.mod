@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/fatih/color v1.15.0
 	github.com/hashicorp/go-version v1.6.0
-	github.com/hashicorp/terraform-config-inspect v0.0.0-20230614215431-f32df32a01cd
+	github.com/hashicorp/terraform-config-inspect v0.0.0-20230808231734-f15f31bf62b3
 	github.com/jedib0t/go-pretty/v6 v6.4.6
 	github.com/rs/zerolog v1.30.0
 	github.com/spf13/cobra v1.7.0
