@@ -10,7 +10,6 @@ A tool that validates and compares used vs. available terraform module versions 
 
 <img width="693" alt="image" src="https://github.com/rollwagen/tf-module-versions/assets/7364201/79244796-c83f-493d-b73f-62fd5378e470">
 
-
 ## Install
 
 ```sh
