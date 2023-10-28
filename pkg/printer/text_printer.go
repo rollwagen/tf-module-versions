@@ -65,7 +65,7 @@ func (TextPrinter) PrintReport(modules []tf.Module, writer io.Writer) error {
 		used := m.UsedVersion
 		if m.UsedVersion == "nil" {
 			used = red("✖")
-			status = red("")
+			status = red("󰉀")
 		}
 
 		t.AppendRow(table.Row{
