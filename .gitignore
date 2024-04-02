@@ -28,3 +28,5 @@ completions/
 # vendor/
 
 .trunk
+ash_output/
+tf-module-versions
