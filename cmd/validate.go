@@ -13,7 +13,7 @@ var (
 var versionCmd = &cobra.Command{
 	Use:   "validate",
 	Short: "Print module version validation on stdout as logs",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		validater.Validate(directory, outputFormat, FlagVerbose)
 	},
 }
