@@ -8,7 +8,7 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/hashicorp/go-version v1.7.0
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20241129133400-c404f8227ea6
-	github.com/jedib0t/go-pretty/v6 v6.6.3
+	github.com/jedib0t/go-pretty/v6 v6.6.5
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.8.1
 	github.com/xanzy/go-gitlab v0.114.0
