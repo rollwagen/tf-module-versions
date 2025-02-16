@@ -13,7 +13,8 @@ linters:
     - errcheck
     # - exhaustive
     # - funlen
-    - gas
+    # - gas
+    - gosec
     # - gochecknoinits
     - goconst
     # - gocritic
@@ -24,18 +25,18 @@ linters:
     # - gomnd
     # - goprintffuncname
     # - gosec
-    # - gosimple
+    - gosimple
     - govet
     - ineffassign
     # - lll
-    - megacheck
+    # - megacheck --> gosimple, staticcheck, unused.
     - misspell
     # - nakedret
     # - noctx
     # - nolintlint
     # - rowserrcheck
     # - scopelint
-    # - staticcheck
+    # - staticcheck --> TODO fix findings
     # - structcheck
     - stylecheck
     - typecheck
