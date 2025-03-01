@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20250203082807-efaa306e97b4
 	github.com/jedib0t/go-pretty/v6 v6.6.6
 	github.com/rs/zerolog v1.33.0
-	github.com/spf13/cobra v1.9.0
+	github.com/spf13/cobra v1.9.1
 	github.com/xanzy/go-gitlab v0.115.0
 )
 
