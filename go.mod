@@ -1,14 +1,11 @@
 module github.com/rollwagen/tf-module-versions
 
 go 1.23.0
-
-toolchain go1.23.4
-
 require (
 	github.com/fatih/color v1.18.0
 	github.com/hashicorp/go-version v1.7.0
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20250203082807-efaa306e97b4
-	github.com/jedib0t/go-pretty/v6 v6.6.6
+	github.com/jedib0t/go-pretty/v6 v6.6.7
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.9.0
 	github.com/xanzy/go-gitlab v0.115.0
